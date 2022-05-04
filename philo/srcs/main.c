@@ -6,34 +6,30 @@
 /*   By: lemmon <lemmon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 12:52:56 by lemmon            #+#    #+#             */
-/*   Updated: 2022/04/22 16:01:48 by lemmon           ###   ########.fr       */
+/*   Updated: 2022/05/04 15:37:37 by lemmon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-void	ft_init(t_data	*data)
+int	ft_error(char *msg)
 {
-	data->n_philo = 0;
-	data->die = 0;
-	data->eat = 0;
-	data->sleep = 0;
-	data->n_eat = 0; // MB if it does not exist, so does not init MB
-	data->left_fork = NULL;
-	data->right_fork = NULL;
+	printf("Error: %s\n", msg);
+	return (1);
 }
- 
-int main(int ac, char **av)
+
+int	main(int ac, char **av)
 {
 	t_data	data;
+
 	if (ac < 5 || ac > 6)
-	{
-		printf("Error params\n");
-		return (1);
-	}
-	ft_init(&data);
+		return (ft_error("Wrong number of arguments"));
 	if (ft_validation(&data, av))
 		return (1);
-	//create_philos(&data);
+	if (init_philosophers(&data) || init_forks(&data))
+		return (1);
+	if (start_game(&data))
+		return (1);
+	finish_game(&data);
 	return (0);
 }
