@@ -6,7 +6,7 @@
 /*   By: lemmon <lemmon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 12:06:03 by lemmon            #+#    #+#             */
-/*   Updated: 2022/05/04 16:13:00 by lemmon           ###   ########.fr       */
+/*   Updated: 2022/05/08 17:43:32 by lemmon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,14 @@ static void	philosopher_do(int time)
 	}
 }
 
+static void	lock_fork(t_data *data, t_philo *philo)
+{
+	pthread_mutex_lock(&data->forks[philo->right_fork]);
+	philosopher_print(data, philo->index, "has taken a fork");
+	pthread_mutex_lock(&data->forks[philo->left_fork]);
+	philosopher_print(data, philo->index, "has taken a fork");
+}
+
 void	*simulation(void *argc)
 {
 	t_philo	*philo;
@@ -44,8 +52,7 @@ void	*simulation(void *argc)
 		my_sleep(200);
 	while (1)
 	{
-		pthread_mutex_lock(&data->forks[philo->right_fork]);
-		pthread_mutex_lock(&data->forks[philo->left_fork]);
+		lock_fork(data, philo);
 		philosopher_print(data, philo->index, "is eating");
 		philo->count_eat++;
 		gettimeofday(&philo->last_eat, NULL);

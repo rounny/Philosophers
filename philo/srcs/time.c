@@ -6,7 +6,7 @@
 /*   By: lemmon <lemmon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 12:06:06 by lemmon            #+#    #+#             */
-/*   Updated: 2022/05/04 15:39:20 by lemmon           ###   ########.fr       */
+/*   Updated: 2022/05/08 17:41:02 by lemmon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	my_sleep(unsigned long ms)
 
 	starttime = get_time();
 	currenttime = starttime;
+	usleep(ms / 10 * 8);
 	while (currenttime - starttime < ms)
 	{
 		currenttime = get_time();

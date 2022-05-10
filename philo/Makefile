@@ -11,7 +11,7 @@ SRCS			= $(addprefix $(SRCS_DIR), $(SRCS_FILES))
 OBJS		  	= $(SRCS:%.c=%.o)
 
 CC		      = cc
-CFLAGS		  = -Wall -Wextra -Werror -pthread #-fsanitize=thread -g
+CFLAGS		  = -Wall -Wextra -Werror #-fsanitize=thread -g
 RM			  =	rm -rf
 
 .PHONY: all clean fclean re 

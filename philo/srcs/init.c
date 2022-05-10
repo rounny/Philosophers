@@ -6,7 +6,7 @@
 /*   By: lemmon <lemmon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/30 12:06:01 by lemmon            #+#    #+#             */
-/*   Updated: 2022/05/04 16:15:53 by lemmon           ###   ########.fr       */
+/*   Updated: 2022/05/10 15:08:47 by lemmon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,19 +51,13 @@ int	init_forks(t_data *data)
 	return (0);
 }
 
-int	start_game(t_data *data)
+static int	check_fed_up(t_data *data)
 {
-	int	i;
-
-	i = 0;
-	while (i < data->number_philo)
+	if (data->count_fed_up == data->number_philo)
 	{
-		if (pthread_create(&(data->philo[i].id), NULL, simulation,
-				(void *)&(data->philo[i])))
-			return (ft_error("Create error"));
-		if (pthread_detach(data->philo[i].id) != 0)
-			return (ft_error("Detach error"));
-		i++;
+		pthread_mutex_lock(&data->print_lock);
+		pthread_mutex_unlock(&data->breaker);
+		return (1);
 	}
 	return (0);
 }
@@ -74,7 +68,7 @@ static int	check_dead(t_data	*data, t_philo *philo, t_timeval time)
 		> (unsigned long)data->time_die)
 	{
 		pthread_mutex_lock(&data->print_lock);
-		printf("%ld %d%s\n", get_cur_time(data), philo->index + 1, "died");
+		printf("%ld %d%s\n", get_cur_time(data), philo->index + 1, " died");
 		return (1);
 	}
 	return (0);
@@ -98,13 +92,10 @@ void	finish_game(t_data *data)
 			pthread_mutex_unlock(&data->breaker);
 			break ;
 		}
-		if (data->count_fed_up == data->number_philo)
-		{
-			pthread_mutex_lock(&data->print_lock);
-			pthread_mutex_unlock(&data->breaker);
+		if (check_fed_up(data) == 1)
 			break ;
-		}
 		pthread_mutex_unlock(&data->breaker);
 		i++;
+		usleep(200);
 	}
 }
